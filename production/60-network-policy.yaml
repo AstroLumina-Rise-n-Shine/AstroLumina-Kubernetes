@@ -20,7 +20,7 @@ spec:
               kubernetes.io/metadata.name: astrolumina-prod
       ports:
         - protocol: TCP
-          port: 80
+          port: 8080
         - protocol: TCP
           port: 3031
         - protocol: TCP
@@ -38,7 +38,7 @@ spec:
               kubernetes.io/metadata.name: kube-system
       ports:
         - protocol: TCP
-          port: 80
+          port: 8080
         - protocol: TCP
           port: 3031
         - protocol: TCP
