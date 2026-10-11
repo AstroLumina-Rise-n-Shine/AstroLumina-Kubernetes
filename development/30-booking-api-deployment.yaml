@@ -32,10 +32,20 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-secret
+      # Baseline hardening: default seccomp profile for every container.
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: booking-api
           image: ghcr.io/astrolumina-by-carmen-ilie/astrolumina-bookingapi:2.0.10
           imagePullPolicy: Always
+          # Baseline hardening: no privilege escalation, no Linux capabilities.
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           ports:
             - name: http
               containerPort: 3033
