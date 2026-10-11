@@ -33,9 +33,16 @@ spec:
       imagePullSecrets:
         - name: ghcr-secret
       # Baseline hardening: default seccomp profile for every container.
+      # Run as the image's unprivileged user (nodejs 1001 / nginx 101).
       securityContext:
         seccompProfile:
           type: RuntimeDefault
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+      volumes:
+        - name: tmp-vol
+          emptyDir: {}
       containers:
         - name: payment-api
           image: ghcr.io/astrolumina-by-carmen-ilie/astrolumina-paymentapi:2.0.11
@@ -46,6 +53,12 @@ spec:
             capabilities:
               drop:
                 - ALL
+            # Read-only root filesystem; writable scratch comes from the
+            # emptyDir volumes above (pid/logs/cache for nginx, /tmp for node).
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp-vol
+              mountPath: /tmp
           ports:
             - name: http
               containerPort: 3032
