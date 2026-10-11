@@ -63,7 +63,7 @@ spec:
                 - ALL
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           # The image entrypoint injects these Compose-style variables into
           # public/env.js at container start. VITE_* names are NOT read.

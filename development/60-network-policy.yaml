@@ -17,7 +17,7 @@ spec:
     - from:
         - podSelector: {}
       ports:
-        - port: 80
+        - port: 8080
           protocol: TCP
         - port: 3031
           protocol: TCP
@@ -31,7 +31,7 @@ spec:
         - ipBlock:
             cidr: 0.0.0.0/0
       ports:
-        - port: 80
+        - port: 8080
           protocol: TCP
         - port: 3031
           protocol: TCP
