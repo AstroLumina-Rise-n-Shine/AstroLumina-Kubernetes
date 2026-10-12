@@ -45,7 +45,7 @@ spec:
           emptyDir: {}
       containers:
         - name: astrology-api
-          image: ghcr.io/astrolumina-by-carmen-ilie/astrolumina-astrologyapi:2.0.13
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-astrologyapi:2.0.13
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:

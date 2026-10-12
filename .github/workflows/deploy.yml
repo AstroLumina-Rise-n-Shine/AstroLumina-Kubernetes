@@ -92,7 +92,7 @@ jobs:
 
           import yaml
 
-          REGISTRY = "ghcr.io/astrolumina-by-carmen-ilie"
+          REGISTRY = "ghcr.io/astrolumina-rise-n-shine"
           env_in = os.environ["INPUT_ENV"]
           env_dir = {"development": "development", "staging": "staging",
                      "production": "production"}[env_in]
