@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: booking-api-green
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   # Let the Doppler operator restart the pods automatically when a synced secret changes.
   annotations:
     secrets.doppler.com/reload: "true"

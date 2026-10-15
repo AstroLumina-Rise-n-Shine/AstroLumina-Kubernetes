@@ -2,7 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: frontend-hpa
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: development
@@ -31,7 +31,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: astrology-api-hpa
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: development
@@ -54,7 +54,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: booking-api-hpa
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: development
@@ -77,7 +77,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: payment-api-hpa
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: development

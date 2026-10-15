@@ -5,7 +5,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: compress
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -16,7 +16,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: security-headers
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -35,7 +35,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: rate-limit
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -49,7 +49,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: strip-astrology
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -62,7 +62,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: strip-payment
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -75,7 +75,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: strip-booking
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -89,7 +89,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: to-https
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -104,7 +104,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: dashboard-auth
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production

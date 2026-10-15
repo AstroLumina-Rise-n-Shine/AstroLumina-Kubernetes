@@ -3,7 +3,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: frontend-blue-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -26,7 +26,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: frontend-green-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -49,7 +49,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: astrology-api-blue-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -72,7 +72,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: astrology-api-green-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -95,7 +95,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: booking-api-blue-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -118,7 +118,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: booking-api-green-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -141,7 +141,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: payment-api-blue-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production
@@ -164,7 +164,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: payment-api-green-hpa
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: production

@@ -93,7 +93,7 @@ Same topology, Helm packaging:
 ```
 charts/astrolumina/
   Chart.yaml                 # name, version, appVersion
-  values-dev.yaml            # NodePorts, tags, permissive policy
+  values-development.yaml            # NodePorts, tags, permissive policy
   values-staging.yaml        # Traefik hosts, HPA 1-3, strict policy
   values-production.yaml     # + TLS, dashboard auth, HPA 3-5
   templates/

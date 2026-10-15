@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/part-of: astrolumina
     environment: development

@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: astrolumina-dev
+  name: astrolumina-development
   labels:
-    name: astrolumina-dev
+    name: astrolumina-development
     environment: development
     app.kubernetes.io/part-of: astrolumina
