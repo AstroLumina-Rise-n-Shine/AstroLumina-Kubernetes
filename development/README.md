@@ -1,6 +1,6 @@
 # Development — step-by-step deploy guide
 
-Deploys the whole stack into namespace `astrolumina-dev`: 1 replica per
+Deploys the whole stack into namespace `astrolumina-development`: 1 replica per
 service, NodePort Services, no ingress (mirrors the Compose dev setup where
 ports are published and no Traefik exists).
 
@@ -116,7 +116,7 @@ controller. Skip only if you already installed it on this exact cluster.
 
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/development"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-dev"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-development"
 ```
 
 Expected: 4 pods created. They will show `ImagePullBackOff` / `ErrImagePull`
@@ -128,7 +128,7 @@ If a pod is `CrashLoopBackOff` (pulled fine, then crashed), check why before
 continuing:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl logs -n astrolumina-dev deploy/frontend --tail=30"
+ssh "$K8S_CP_CONN" -- "kubectl logs -n astrolumina-development deploy/frontend --tail=30"
 ```
 
 ## 3b. Create the GHCR pull secret (REQUIRED, once per cluster rebuild)
@@ -151,16 +151,16 @@ remotely:
 export GITHUB_USER=$(doppler secrets get GITHUB_USER --plain --project astrolumina --config dev)
 export GITHUB_TOKEN=$(doppler secrets get GITHUB_TOKEN --plain --project astrolumina --config dev)
 export GITHUB_EMAIL=$(doppler secrets get GITHUB_EMAIL --plain --project astrolumina --config dev)
-ssh "$K8S_CP_CONN" -- 'kubectl create secret docker-registry ghcr-secret -n astrolumina-dev --docker-server=ghcr.io --docker-username='"$GITHUB_USER"' --docker-password='"$GITHUB_TOKEN"' --docker-email='"$GITHUB_EMAIL"' --dry-run=client -o yaml | kubectl apply -f -'
+ssh "$K8S_CP_CONN" -- 'kubectl create secret docker-registry ghcr-secret -n astrolumina-development --docker-server=ghcr.io --docker-username='"$GITHUB_USER"' --docker-password='"$GITHUB_TOKEN"' --docker-email='"$GITHUB_EMAIL"' --dry-run=client -o yaml | kubectl apply -f -'
 unset GITHUB_TOKEN GITHUB_USER GITHUB_EMAIL
 ```
 
 Then force a re-pull and verify:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-dev"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-dev"
-ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-dev --sort-by=.lastTimestamp | tail -10"
+ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-development"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-development"
+ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-development --sort-by=.lastTimestamp | tail -10"
 ```
 
 Expected: pods leave `ImagePullBackOff` and reach `Running` (config still
@@ -183,7 +183,7 @@ To try a pinned build, bump the tag in the 4 Deployment files, commit, and
 re-apply:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/development && kubectl get pods -n astrolumina-dev"
+ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/development && kubectl get pods -n astrolumina-development"
 ```
 
 Expected: the Deployments run the tags from git. If a pod reports
@@ -220,14 +220,14 @@ Verify:
 
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl get dopplersecrets -n doppler-operator-system"
-ssh "$K8S_CP_CONN" -- "kubectl describe dopplersecret astrolumina-dev-payment-api -n doppler-operator-system"
+ssh "$K8S_CP_CONN" -- "kubectl describe dopplersecret astrolumina-development-payment-api -n doppler-operator-system"
 ```
 
 Expected: no errors in `describe` output. Then confirm a real value landed
 (prints only the first 8 chars, never paste full secrets in chat/logs):
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl get secret env-payment-api-secrets -n astrolumina-dev -o jsonpath='{.data.STRIPE_SK}' | base64 -d | cut -c1-8"
+ssh "$K8S_CP_CONN" -- "kubectl get secret env-payment-api-secrets -n astrolumina-development -o jsonpath='{.data.STRIPE_SK}' | base64 -d | cut -c1-8"
 ```
 
 Expected: `sk_test_` or `sk_live_`. Repeat the
@@ -242,8 +242,8 @@ values and ArgoCD can sync freely. Prove it:
 
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/development"
-ssh "$K8S_CP_CONN" -- "kubectl rollout status deploy/frontend -n astrolumina-dev"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-dev"
+ssh "$K8S_CP_CONN" -- "kubectl rollout status deploy/frontend -n astrolumina-development"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-development"
 ```
 
 Expected: pods restart automatically (the `secrets.doppler.com/reload`
@@ -278,10 +278,10 @@ restarts it once the operator re-syncs), then hard-refresh the browser page
 - Pod stuck in `ImagePullBackOff` / `ErrImagePull` after step 3b: the
   `ghcr-secret` is missing, or the Doppler
   `GITHUB_TOKEN` is expired / lacks `read:packages`. Check with
-  `ssh "$K8S_CP_CONN" -- "kubectl get secret ghcr-secret -n astrolumina-dev"`
-  and `ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-dev --sort-by=.lastTimestamp | tail -10"`.
+  `ssh "$K8S_CP_CONN" -- "kubectl get secret ghcr-secret -n astrolumina-development"`
+  and `ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-development --sort-by=.lastTimestamp | tail -10"`.
   Recreate the secret with the command from step 3b, then
-  `ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-dev"`.
+  `ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-development"`.
 - Pod `CrashLoopBackOff` with a "missing environment variable" log: the
   Doppler `dev` config lacks that key. Add it in Doppler, the operator syncs
   within seconds and restarts the pods by itself.
@@ -295,7 +295,7 @@ restarts it once the operator re-syncs), then hard-refresh the browser page
   in `doppler-operator-system` (re-run the check with `-A` to see which
   namespace yours went to).
 - `kubectl get secrets` / `get pods` with no `-n` only shows the `default`
-  namespace — always pass `-n astrolumina-dev` for this stack.
+  namespace — always pass `-n astrolumina-development` for this stack.
 - NodePort unreachable from your machine: the VMs' firewall is the usual
   suspect. On a node, `ss -tlnp | grep 30080` must show a listener; if it
   does, open the port in the hypervisor/cloud firewall.

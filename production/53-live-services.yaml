@@ -8,7 +8,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-live
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/name: frontend
     app.kubernetes.io/part-of: astrolumina
@@ -30,7 +30,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: astrology-api-live
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/name: astrology-api
     app.kubernetes.io/part-of: astrolumina
@@ -52,7 +52,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: booking-api-live
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/name: booking-api
     app.kubernetes.io/part-of: astrolumina
@@ -74,7 +74,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: payment-api-live
-  namespace: astrolumina-prod
+  namespace: astrolumina-production
   labels:
     app.kubernetes.io/name: payment-api
     app.kubernetes.io/part-of: astrolumina

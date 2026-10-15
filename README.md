@@ -78,9 +78,9 @@ ssh "$K8S_CP_CONN" -- "kubectl apply -f https://github.com/DopplerHQ/kubernetes-
 
 | Doppler config | Token Secret (imperative, NOT in git) | Namespace | Managed Secrets |
 |---|---|---|---|
-| `dev` | `doppler-token-dev` | `astrolumina-dev` | `env-frontend-secrets`, `env-astrology-api-secrets`, `env-booking-api-secrets`, `env-payment-api-secrets` |
+| `dev` | `doppler-token-dev` | `astrolumina-development` | `env-frontend-secrets`, `env-astrology-api-secrets`, `env-booking-api-secrets`, `env-payment-api-secrets` |
 | `stg` | `doppler-token-stg` | `astrolumina-staging` | same 4 names |
-| `prd` | `doppler-token-prd` | `astrolumina-prod` | same 4 names |
+| `prd` | `doppler-token-prd` | `astrolumina-production` | same 4 names |
 
 - `01-doppler-secrets.yaml` in each environment holds the 4 `DopplerSecret`
   resources (one per managed Secret, key subsets included), so

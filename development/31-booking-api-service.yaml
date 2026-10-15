@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: booking-api
-  namespace: astrolumina-dev
+  namespace: astrolumina-development
   labels:
     app.kubernetes.io/name: booking-api
     app.kubernetes.io/part-of: astrolumina

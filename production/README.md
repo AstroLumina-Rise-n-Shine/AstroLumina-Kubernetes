@@ -1,6 +1,6 @@
 # Production — step-by-step deploy guide
 
-Deploys into namespace `astrolumina-prod`: blue + green variants at
+Deploys into namespace `astrolumina-production`: blue + green variants at
 3 replicas each, Traefik `IngressRoute` HTTPS-only on `websecure`
 (TLS via the `letsencrypt` certResolver), single host
 `production.k8s.astrolumina.ro` with `/api/*` prefix routing, plus the
@@ -158,7 +158,7 @@ There is no dashboard password file in git at all — the Secret is created
 purely imperatively (like `ghcr-secret`). The real hash already lives in
 Doppler as
 `TRAEFIK_DASHBOARD_AUTH` (`prd` config, full `admin:$2y$...` line). The
-`astrolumina-prod` namespace does not exist yet at this point (it is normally
+`astrolumina-production` namespace does not exist yet at this point (it is normally
 created by `apply -k` in step 5), so create it explicitly first — re-applying
 it later via `apply -k` is harmless:
 
@@ -166,7 +166,7 @@ it later via `apply -k` is harmless:
 ssh "$K8S_CP_CONN" -- "kubectl apply -f /mnt/k8s/production/00-namespace.yaml"
 export TRAEFIK_DASHBOARD_AUTH=$(doppler secrets get TRAEFIK_DASHBOARD_AUTH --plain --project astrolumina --config prd)
 ESCAPED_AUTH=${TRAEFIK_DASHBOARD_AUTH//\$/\\\$}
-ssh "$K8S_CP_CONN" -- 'kubectl create secret generic traefik-dashboard-auth -n astrolumina-prod --from-literal=users='"$ESCAPED_AUTH"' --dry-run=client -o yaml | kubectl apply -f -'
+ssh "$K8S_CP_CONN" -- 'kubectl create secret generic traefik-dashboard-auth -n astrolumina-production --from-literal=users='"$ESCAPED_AUTH"' --dry-run=client -o yaml | kubectl apply -f -'
 unset ESCAPED_AUTH TRAEFIK_DASHBOARD_AUTH
 ```
 
@@ -184,7 +184,7 @@ Expected: deployment `Available`, CRD exists.
 
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/production"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-prod"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-production"
 ```
 
 Expected: 8 pods created. They will show `ImagePullBackOff` / `ErrImagePull`
@@ -195,7 +195,7 @@ and the pods start by themselves once Doppler syncs.
 On `CrashLoopBackOff` (pulled fine, then crashed), inspect first:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl logs -n astrolumina-prod deploy/frontend-blue --tail=30"
+ssh "$K8S_CP_CONN" -- "kubectl logs -n astrolumina-production deploy/frontend-blue --tail=30"
 ```
 
 ## 5b. Create the GHCR pull secret (REQUIRED, once per cluster rebuild)
@@ -218,16 +218,16 @@ remotely:
 export GITHUB_USER=$(doppler secrets get GITHUB_USER --plain --project astrolumina --config prd)
 export GITHUB_TOKEN=$(doppler secrets get GITHUB_TOKEN --plain --project astrolumina --config prd)
 export GITHUB_EMAIL=$(doppler secrets get GITHUB_EMAIL --plain --project astrolumina --config prd)
-ssh "$K8S_CP_CONN" -- 'kubectl create secret docker-registry ghcr-secret -n astrolumina-prod --docker-server=ghcr.io --docker-username='"$GITHUB_USER"' --docker-password='"$GITHUB_TOKEN"' --docker-email='"$GITHUB_EMAIL"' --dry-run=client -o yaml | kubectl apply -f -'
+ssh "$K8S_CP_CONN" -- 'kubectl create secret docker-registry ghcr-secret -n astrolumina-production --docker-server=ghcr.io --docker-username='"$GITHUB_USER"' --docker-password='"$GITHUB_TOKEN"' --docker-email='"$GITHUB_EMAIL"' --dry-run=client -o yaml | kubectl apply -f -'
 unset GITHUB_TOKEN GITHUB_USER GITHUB_EMAIL
 ```
 
 Then force a re-pull and verify:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-prod"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-prod"
-ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-prod --sort-by=.lastTimestamp | tail -10"
+ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-production"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-production"
+ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-production --sort-by=.lastTimestamp | tail -10"
 ```
 
 Expected: pods leave `ImagePullBackOff` and reach `Running` (config still
@@ -251,11 +251,11 @@ To promote a new build, bump the tag in the blue AND green Deployment files
 color), commit, and re-apply:
 
 ```bash
-ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/production && kubectl get pods -n astrolumina-prod"
+ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/production && kubectl get pods -n astrolumina-production"
 ```
 
 Expected: all 8 Deployments run the tags from git
-(`ssh "$K8S_CP_CONN" -- "kubectl describe deploy/frontend-blue -n astrolumina-prod | grep Image:"`
+(`ssh "$K8S_CP_CONN" -- "kubectl describe deploy/frontend-blue -n astrolumina-production | grep Image:"`
 shows `:2.0.8`). If a pod reports `ErrImagePull` with `manifest unknown`,
 the tag does not exist on GHCR — fix the value in the manifests and re-apply.
 Double-check parity with the production Compose `versions.env`, and make sure
@@ -291,7 +291,7 @@ Verify (prints only the first 8 chars of one key):
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl get dopplersecrets -n doppler-operator-system"
 ssh "$K8S_CP_CONN" -- "kubectl describe dopplersecret astrolumina-production-payment-api -n doppler-operator-system"
-ssh "$K8S_CP_CONN" -- "kubectl get secret env-payment-api-secrets -n astrolumina-prod -o jsonpath='{.data.STRIPE_SK}' | base64 -d | cut -c1-8"
+ssh "$K8S_CP_CONN" -- "kubectl get secret env-payment-api-secrets -n astrolumina-production -o jsonpath='{.data.STRIPE_SK}' | base64 -d | cut -c1-8"
 ```
 
 Expected: no errors; the key starts with `sk_live_` (NOT `sk_test_`). Double-check you synced the `prd` config, not `stg`: charging
@@ -306,7 +306,7 @@ values and ArgoCD can sync freely. Prove it:
 
 ```bash
 ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/production"
-ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-prod"
+ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-production"
 ```
 
 ## 8. Reach it from your host
@@ -340,7 +340,7 @@ Expected issuer: Let's Encrypt.
 ## 9. Blue-green cutover
 
 Same drill as staging (see `staging/README.md` step 7): verify green
-(`ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-prod -l variant=green"`),
+(`ssh "$K8S_CP_CONN" -- "kubectl get pods -n astrolumina-production -l variant=green"`),
 port-forward smoke test via `ssh -L`, flip the 4 `variant:` selectors in
 `53-live-services.yaml`, re-apply (`ssh "$K8S_CP_CONN" -- "kubectl apply -k /mnt/k8s/production"`),
 re-run the step 8 checks.
@@ -350,10 +350,10 @@ re-run the step 8 checks.
 - Pod stuck in `ImagePullBackOff` / `ErrImagePull` after step 5b: the
   `ghcr-secret` is missing, or the Doppler
   `GITHUB_TOKEN` is expired / lacks `read:packages`. Check with
-  `ssh "$K8S_CP_CONN" -- "kubectl get secret ghcr-secret -n astrolumina-prod"`
-  and `ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-prod --sort-by=.lastTimestamp | tail -10"`.
+  `ssh "$K8S_CP_CONN" -- "kubectl get secret ghcr-secret -n astrolumina-production"`
+  and `ssh "$K8S_CP_CONN" -- "kubectl get events -n astrolumina-production --sort-by=.lastTimestamp | tail -10"`.
   Recreate the secret with the command from step 5b, then
-  `ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-prod"`.
+  `ssh "$K8S_CP_CONN" -- "kubectl rollout restart deploy -n astrolumina-production"`.
 - Browser cert warning on a supposedly public setup: LE never issued.
   Check Traefik logs for ACME errors (usually port 80 not publicly
   reachable, or wrong email/rate limits). See the IMPORTANT note in step 2.
@@ -370,6 +370,6 @@ re-run the step 8 checks.
   in `doppler-operator-system` (re-run the check with `-A` to see which
   namespace yours went to).
 - `kubectl get secrets` / `get pods` with no `-n` only shows the `default`
-  namespace — always pass `-n astrolumina-prod` for this stack.
+  namespace — always pass `-n astrolumina-production` for this stack.
 - HPA `<unknown>` metrics: install metrics-server if you want real
   autoscaling data; harmless otherwise.
