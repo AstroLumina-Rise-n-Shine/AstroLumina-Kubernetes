@@ -67,7 +67,7 @@ spec:
           emptyDir: {}
       containers:
         - name: frontend
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.11
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.15
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
