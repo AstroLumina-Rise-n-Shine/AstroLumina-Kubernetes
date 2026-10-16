@@ -75,9 +75,11 @@ spec:
             capabilities:
               drop:
                 - ALL
-            # Read-only root filesystem; writable scratch comes from the
-            # emptyDir volumes at pod level (pid/logs/cache for nginx, /tmp for node).
-            readOnlyRootFilesystem: true
+            # NOTE: no readOnlyRootFilesystem here on purpose. The image
+            # entrypoint rewrites /usr/share/nginx/html/{env.js,index.html}
+            # with sed -i at container start, which needs that directory
+            # writable. All other hardening (non-root, drop ALL, no privilege
+            # escalation) stays on.
           volumeMounts:
             - name: tmp-vol
               mountPath: /tmp
