@@ -45,6 +45,21 @@ spec:
           port: 3032
         - protocol: TCP
           port: 3033
+    # Prometheus (namespace monitoring) scrapes the API /metrics ports via
+    # the ServiceMonitors. Only the three API ports are needed here — the
+    # frontend on 8080 exposes no /metrics endpoint.
+    # NOTE: no podSelector here on purpose (see the Traefik rule above).
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 3031
+        - protocol: TCP
+          port: 3032
+        - protocol: TCP
+          port: 3033
   egress:
     - to:
         - namespaceSelector:
