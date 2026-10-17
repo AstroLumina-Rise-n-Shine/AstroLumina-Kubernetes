@@ -49,6 +49,13 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Pods
+      pods:
+        metric:
+          name: api_requests_per_minute
+        target:
+          type: AverageValue
+          averageValue: "20"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -72,6 +79,13 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Pods
+      pods:
+        metric:
+          name: api_requests_per_minute
+        target:
+          type: AverageValue
+          averageValue: "20"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -95,3 +109,10 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Pods
+      pods:
+        metric:
+          name: api_requests_per_minute
+        target:
+          type: AverageValue
+          averageValue: "20"

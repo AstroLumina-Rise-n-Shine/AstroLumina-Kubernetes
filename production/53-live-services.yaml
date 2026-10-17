@@ -15,6 +15,10 @@ metadata:
     app.kubernetes.io/component: frontend
     environment: production
 spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
   type: ClusterIP
   ports:
     - name: http
@@ -37,6 +41,10 @@ metadata:
     app.kubernetes.io/component: astrology-api
     environment: production
 spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
   type: ClusterIP
   ports:
     - name: http
@@ -59,6 +67,10 @@ metadata:
     app.kubernetes.io/component: booking-api
     environment: production
 spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
   type: ClusterIP
   ports:
     - name: http
@@ -81,6 +93,10 @@ metadata:
     app.kubernetes.io/component: payment-api
     environment: production
 spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
   type: ClusterIP
   ports:
     - name: http
