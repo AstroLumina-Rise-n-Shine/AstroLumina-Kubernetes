@@ -9,6 +9,10 @@ metadata:
     app.kubernetes.io/component: frontend
     environment: development
 spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
   # NodePort replaces the Compose port publishing: no Traefik in dev, the
   # laptop browser reaches the frontend directly at <node-ip>:30080.
   type: NodePort
