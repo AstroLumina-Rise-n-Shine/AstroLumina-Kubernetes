@@ -142,10 +142,14 @@ Doppler operator because a pull secret must be
 `type: kubernetes.io/dockerconfigjson`, not `Opaque`):
 
 The three `export` lines run on your LAPTOP (Doppler lives here). The
-`kubectl create` runs on the CP — note the quote splice
-`'...'"$VAR"'...'`: secret values expand locally, so tokens with `$`,
-`!` or quotes survive the trip intact, while the `|` pipe still executes
-remotely:
+`kubectl create` runs on the CP — the quote splice `'...'"$VAR"'...'`
+expands the variables locally, but the assembled string is parsed a second
+time by the REMOTE shell (the double quotes are consumed on the laptop), so
+a value containing `$`, backticks or backslashes would be re-interpreted
+there (`$x` silently expands to an empty variable). GitHub tokens are plain
+alphanumerics and pass through intact; if you ever splice a different
+value, pre-escape it (`VAR="${VAR//$/\\$}"`) before the `ssh` call. The
+`|` pipe still executes remotely:
 
 ```bash
 export GITHUB_USER=$(doppler secrets get GITHUB_USER --plain --project astrolumina --config dev)
