@@ -21,6 +21,16 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    # Frontend request rate per pod (nginx-prometheus-exporter sidecar ->
+    # prometheus-adapter). Counts everything Nginx sees, kubelet probes
+    # included (~6/min floor) — target 20/min.
+    - type: Pods
+      pods:
+        metric:
+          name: frontend_requests_per_minute
+        target:
+          type: AverageValue
+          averageValue: "20"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -44,6 +54,16 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    # Frontend request rate per pod (nginx-prometheus-exporter sidecar ->
+    # prometheus-adapter). Counts everything Nginx sees, kubelet probes
+    # included (~6/min floor) — target 20/min.
+    - type: Pods
+      pods:
+        metric:
+          name: frontend_requests_per_minute
+        target:
+          type: AverageValue
+          averageValue: "20"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
