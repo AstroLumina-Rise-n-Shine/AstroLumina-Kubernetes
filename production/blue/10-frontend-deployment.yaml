@@ -67,7 +67,7 @@ spec:
           emptyDir: {}
       containers:
         - name: frontend
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.15
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.16
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
@@ -239,4 +239,29 @@ spec:
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 2
+        # nginx-prometheus-exporter sidecar: turns Nginx stub_status into
+        # Prometheus metrics (nginx_http_requests_total, connections) on
+        # :9113 — scraped via the frontend-live Service metrics port.
+        - name: nginx-metrics
+          image: docker.io/nginx/nginx-prometheus-exporter:1.4.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - -nginx.scrape-uri=http://127.0.0.1:8080/stub_status
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          ports:
+            - name: metrics
+              containerPort: 9113
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
       restartPolicy: Always
