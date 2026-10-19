@@ -1,0 +1,10 @@
+# Trusted container registries for AVD-KSV-0125.
+#
+# Application images are published only to the org-controlled GHCR namespace
+# (ghcr.io/astrolumina-rise-n-shine). The single docker.io image in the repo
+# (the official, version-pinned nginx-prometheus-exporter sidecar) is handled
+# by a path-scoped exception in .trivyignore.yaml instead of trusting all of
+# Docker Hub.
+ksv0125:
+  trusted_registries:
+    - ghcr.io
