@@ -40,7 +40,18 @@ spec:
         runAsNonRoot: true
         runAsUser: 101
         runAsGroup: 101
+        # The html emptyDir is seeded and rewritten by UID/GID 101. Let the
+        # kubelet hand it to the pod's group instead of relying on the
+        # world-writable emptyDir default; OnRootMismatch avoids a recursive
+        # chown on every restart.
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
       volumes:
+        # Writable copy of /usr/share/nginx/html: the image entrypoint
+        # rewrites env.js and index.html with sed -i at startup, so that
+        # directory must stay writable even with a read-only root filesystem.
+        - name: frontend-html
+          emptyDir: {}
         - name: tmp-vol
           emptyDir: {}
         - name: nginx-logs
@@ -49,6 +60,37 @@ spec:
           emptyDir: {}
         - name: nginx-run
           emptyDir: {}
+      # Seed the writable html volume from the image before the main container
+      # starts. Runs as the same unprivileged nginx user; no entrypoint, no
+      # network. The main container then applies its runtime sed -i to this
+      # copy while the rest of its root filesystem stays immutable.
+      initContainers:
+        - name: init-frontend-html
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.16
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - cp -R /usr/share/nginx/html/. /frontend-html/
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+          volumeMounts:
+            - name: frontend-html
+              mountPath: /frontend-html
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
       containers:
         - name: frontend
           image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.16
@@ -59,12 +101,13 @@ spec:
             capabilities:
               drop:
                 - ALL
-            # NOTE: no readOnlyRootFilesystem here on purpose. The image
-            # entrypoint rewrites /usr/share/nginx/html/{env.js,index.html}
-            # with sed -i at container start, which needs that directory
-            # writable. All other hardening (non-root, drop ALL, no privilege
-            # escalation) stays on.
+            # The root filesystem is immutable. The entrypoint's sed -i
+            # rewrites env.js/index.html on the writable emptyDir mounted at
+            # /usr/share/nginx/html (seeded by the init container).
+            readOnlyRootFilesystem: true
           volumeMounts:
+            - name: frontend-html
+              mountPath: /usr/share/nginx/html
             - name: tmp-vol
               mountPath: /tmp
             - name: nginx-logs
