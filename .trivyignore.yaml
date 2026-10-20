@@ -18,9 +18,26 @@ misconfigurations:
   # volumes, which are not shared with other workloads.
   - id: AVD-KSV-0020
     paths:
-      - "development/*-deployment.yaml"
-      - "staging/*/*-deployment.yaml"
-      - "production/*/*-deployment.yaml"
+      - "development/10-frontend-deployment.yaml"
+      - "development/20-astrology-api-deployment.yaml"
+      - "development/30-booking-api-deployment.yaml"
+      - "development/40-payment-api-deployment.yaml"
+      - "staging/blue/10-frontend-deployment.yaml"
+      - "staging/blue/20-astrology-api-deployment.yaml"
+      - "staging/blue/30-booking-api-deployment.yaml"
+      - "staging/blue/40-payment-api-deployment.yaml"
+      - "staging/green/10-frontend-deployment.yaml"
+      - "staging/green/20-astrology-api-deployment.yaml"
+      - "staging/green/30-booking-api-deployment.yaml"
+      - "staging/green/40-payment-api-deployment.yaml"
+      - "production/blue/10-frontend-deployment.yaml"
+      - "production/blue/20-astrology-api-deployment.yaml"
+      - "production/blue/30-booking-api-deployment.yaml"
+      - "production/blue/40-payment-api-deployment.yaml"
+      - "production/green/10-frontend-deployment.yaml"
+      - "production/green/20-astrology-api-deployment.yaml"
+      - "production/green/30-booking-api-deployment.yaml"
+      - "production/green/40-payment-api-deployment.yaml"
     statement: >-
       Images ship fixed non-root UIDs (nginx 101, nodejs 1001); raising the
       UID would force a rebuild and chown of every application image without
@@ -28,9 +45,26 @@ misconfigurations:
       block privilege escalation and use a read-only root filesystem.
   - id: AVD-KSV-0021
     paths:
-      - "development/*-deployment.yaml"
-      - "staging/*/*-deployment.yaml"
-      - "production/*/*-deployment.yaml"
+      - "development/10-frontend-deployment.yaml"
+      - "development/20-astrology-api-deployment.yaml"
+      - "development/30-booking-api-deployment.yaml"
+      - "development/40-payment-api-deployment.yaml"
+      - "staging/blue/10-frontend-deployment.yaml"
+      - "staging/blue/20-astrology-api-deployment.yaml"
+      - "staging/blue/30-booking-api-deployment.yaml"
+      - "staging/blue/40-payment-api-deployment.yaml"
+      - "staging/green/10-frontend-deployment.yaml"
+      - "staging/green/20-astrology-api-deployment.yaml"
+      - "staging/green/30-booking-api-deployment.yaml"
+      - "staging/green/40-payment-api-deployment.yaml"
+      - "production/blue/10-frontend-deployment.yaml"
+      - "production/blue/20-astrology-api-deployment.yaml"
+      - "production/blue/30-booking-api-deployment.yaml"
+      - "production/blue/40-payment-api-deployment.yaml"
+      - "production/green/10-frontend-deployment.yaml"
+      - "production/green/20-astrology-api-deployment.yaml"
+      - "production/green/30-booking-api-deployment.yaml"
+      - "production/green/40-payment-api-deployment.yaml"
     statement: >-
       Images ship fixed non-root GIDs (nginx 101, nodejs 1001); raising the
       GID would force a rebuild and chown of every application image without
