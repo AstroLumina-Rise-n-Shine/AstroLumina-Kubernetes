@@ -61,7 +61,7 @@ spec:
           emptyDir: {}
       containers:
         - name: booking-api
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-bookingapi:2.0.12
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-bookingapi:2.0.13
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
