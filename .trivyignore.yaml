@@ -1,0 +1,87 @@
+# Reviewed exceptions for the Trivy config scan.
+#
+# Every entry is scoped to a check ID, and to the paths where the exception
+# applies. Do not add blanket/global ignores: a new workload that uses a
+# different image or UID should surface its own finding.
+---
+misconfigurations:
+  # AVD-KSV-0020 / AVD-KSV-0021 recommend UID/GID > 10000 to avoid collisions
+  # with the host user table.
+  #
+  # The application images are built on node:24-alpine (UID/GID 1001) and
+  # nginx:alpine (UID/GID 101), and their files are owned by those IDs. Moving
+  # to >10000 requires rebuilding all four application images and recursively
+  # chowning their files. It adds no containment: every container already runs
+  # non-root, drops ALL capabilities, disables privilege escalation, uses the
+  # RuntimeDefault seccomp profile and (after this change) a read-only root
+  # filesystem. The host-side risk is limited to the pod's own emptyDir
+  # volumes, which are not shared with other workloads.
+  - id: AVD-KSV-0020
+    paths:
+      - "development/10-frontend-deployment.yaml"
+      - "development/20-astrology-api-deployment.yaml"
+      - "development/30-booking-api-deployment.yaml"
+      - "development/40-payment-api-deployment.yaml"
+      - "staging/blue/10-frontend-deployment.yaml"
+      - "staging/blue/20-astrology-api-deployment.yaml"
+      - "staging/blue/30-booking-api-deployment.yaml"
+      - "staging/blue/40-payment-api-deployment.yaml"
+      - "staging/green/10-frontend-deployment.yaml"
+      - "staging/green/20-astrology-api-deployment.yaml"
+      - "staging/green/30-booking-api-deployment.yaml"
+      - "staging/green/40-payment-api-deployment.yaml"
+      - "production/blue/10-frontend-deployment.yaml"
+      - "production/blue/20-astrology-api-deployment.yaml"
+      - "production/blue/30-booking-api-deployment.yaml"
+      - "production/blue/40-payment-api-deployment.yaml"
+      - "production/green/10-frontend-deployment.yaml"
+      - "production/green/20-astrology-api-deployment.yaml"
+      - "production/green/30-booking-api-deployment.yaml"
+      - "production/green/40-payment-api-deployment.yaml"
+    statement: >-
+      Images ship fixed non-root UIDs (nginx 101, nodejs 1001); raising the
+      UID would force a rebuild and chown of every application image without
+      adding containment. All containers are non-root, drop ALL capabilities,
+      block privilege escalation and use a read-only root filesystem.
+  - id: AVD-KSV-0021
+    paths:
+      - "development/10-frontend-deployment.yaml"
+      - "development/20-astrology-api-deployment.yaml"
+      - "development/30-booking-api-deployment.yaml"
+      - "development/40-payment-api-deployment.yaml"
+      - "staging/blue/10-frontend-deployment.yaml"
+      - "staging/blue/20-astrology-api-deployment.yaml"
+      - "staging/blue/30-booking-api-deployment.yaml"
+      - "staging/blue/40-payment-api-deployment.yaml"
+      - "staging/green/10-frontend-deployment.yaml"
+      - "staging/green/20-astrology-api-deployment.yaml"
+      - "staging/green/30-booking-api-deployment.yaml"
+      - "staging/green/40-payment-api-deployment.yaml"
+      - "production/blue/10-frontend-deployment.yaml"
+      - "production/blue/20-astrology-api-deployment.yaml"
+      - "production/blue/30-booking-api-deployment.yaml"
+      - "production/blue/40-payment-api-deployment.yaml"
+      - "production/green/10-frontend-deployment.yaml"
+      - "production/green/20-astrology-api-deployment.yaml"
+      - "production/green/30-booking-api-deployment.yaml"
+      - "production/green/40-payment-api-deployment.yaml"
+    statement: >-
+      Images ship fixed non-root GIDs (nginx 101, nodejs 1001); raising the
+      GID would force a rebuild and chown of every application image without
+      adding containment. All containers are non-root, drop ALL capabilities,
+      block privilege escalation and use a read-only root filesystem.
+  # AVD-KSV-0125 flags images outside its built-in registry allowlist. All
+  # application images are trusted through trivy.yaml (ghcr.io). The frontend
+  # pods additionally run the official NGINX metrics sidecar from docker.io;
+  # trust is scoped to the four files that contain it rather than allowing
+  # every Docker Hub image repo-wide.
+  - id: AVD-KSV-0125
+    paths:
+      - "staging/blue/10-frontend-deployment.yaml"
+      - "staging/green/10-frontend-deployment.yaml"
+      - "production/blue/10-frontend-deployment.yaml"
+      - "production/green/10-frontend-deployment.yaml"
+    statement: >-
+      Only non-GHCR image is docker.io/nginx/nginx-prometheus-exporter:1.4.1,
+      the official NGINX sidecar pinned by tag; it is the single exception,
+      scoped to the frontend Deployment files that use it.

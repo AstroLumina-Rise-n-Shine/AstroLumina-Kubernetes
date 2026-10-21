@@ -90,10 +90,10 @@ jobs:
       - run: kube-linter lint --config .kube-linter.yaml --format plain /tmp/k8sbuild/staging.yaml
       - run: kube-linter lint --config .kube-linter.yaml --format plain /tmp/k8sbuild/production.yaml
 
-  # Misconfiguration scan. Advisory only (exit-code 0): the manifests have
-  # known hardening gaps (read-only root fs, default securityContext - see
-  # .kube-linter.yaml) that need runtime testing first. Findings still land
-  # in the Security tab via SARIF.
+  # Misconfiguration scan. Advisory only (exit-code 0) so a new finding does
+  # not block an unrelated PR; findings still land in the Security tab via
+  # SARIF. Reviewed exceptions and the trusted-registry allowlist live in
+  # .trivyignore.yaml and trivy.yaml.
   trivy-config:
     runs-on: ubuntu-latest
     steps:

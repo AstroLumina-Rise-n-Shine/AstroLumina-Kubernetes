@@ -1,0 +1,12 @@
+# Trivy configuration used by the CI "trivy-config" job (repo root is the
+# working directory, so Trivy picks this file up automatically).
+#
+# - `rego.data` feeds the trusted-registry allowlist consumed by AVD-KSV-0125.
+# - `ignorefile` switches to the YAML ignore file, which documents the reviewed
+#   exceptions (see .trivyignore.yaml). Keep exceptions ID- and path-scoped.
+---
+ignorefile: .trivyignore.yaml
+
+rego:
+  data:
+    - .trivy
