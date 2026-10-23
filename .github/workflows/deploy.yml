@@ -61,11 +61,20 @@ jobs:
       pull-requests: write
     steps:
       - name: Require at least one version
+        # Inputs are passed through env and quoted instead of being
+        # interpolated into the shell command (avoids script injection; the
+        # values are validated against an X.Y.Z/latest pattern in the Python
+        # step below).
+        env:
+          FRONTEND_VERSION: ${{ inputs.frontend_version }}
+          ASTROLOGY_VERSION: ${{ inputs.astrology_version }}
+          BOOKING_VERSION: ${{ inputs.booking_version }}
+          PAYMENT_VERSION: ${{ inputs.payment_version }}
         run: |
-          if [ -z "${{ inputs.frontend_version }}" ] \
-            && [ -z "${{ inputs.astrology_version }}" ] \
-            && [ -z "${{ inputs.booking_version }}" ] \
-            && [ -z "${{ inputs.payment_version }}" ]; then
+          if [ -z "$FRONTEND_VERSION" ] \
+            && [ -z "$ASTROLOGY_VERSION" ] \
+            && [ -z "$BOOKING_VERSION" ] \
+            && [ -z "$PAYMENT_VERSION" ]; then
             echo "At least one service version is required" >&2
             exit 1
           fi
