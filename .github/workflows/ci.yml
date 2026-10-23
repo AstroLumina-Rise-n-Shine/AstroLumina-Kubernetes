@@ -1,11 +1,11 @@
 # CI for the raw Kubernetes manifests: lint, build, schema-check, scan.
-# Runs on every push and pull request.
+# Runs for pull requests targeting main.
 ---
-name: Kubernetes CI
+name: CI
 
 on:
-  push:
   pull_request:
+    branches: [main]
 
 permissions:
   contents: read
