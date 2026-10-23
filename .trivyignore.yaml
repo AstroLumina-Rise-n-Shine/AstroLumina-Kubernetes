@@ -85,3 +85,29 @@ misconfigurations:
       Only non-GHCR image is docker.io/nginx/nginx-prometheus-exporter:1.4.1,
       the official NGINX sidecar pinned by tag; it is the single exception,
       scoped to the frontend Deployment files that use it.
+  # AVD-KSV-0048 / AVD-KSV-0049 / AVD-KSV-0056 flag write verbs on workloads,
+  # ConfigMaps and networking objects. The development developer Role exists
+  # to grant exactly those (create/update/patch/delete Deployments, Services,
+  # ConfigMaps, HPAs and NetworkPolicies) so external developers can iterate on
+  # development without cluster-admin. The Role is namespaced, has no Secret
+  # access, no pods/exec and no pod deletion; staging is read-only and
+  # production has no human binding. Scoped to this single file on purpose:
+  # any other RBAC file that grows write verbs must justify its own exception.
+  - id: AVD-KSV-0048
+    paths:
+      - "development/80-rbac.yaml"
+    statement: >-
+      Write access to Deployments is the intended development capability; the
+      Role cannot delete pods, exec into containers or read Secrets.
+  - id: AVD-KSV-0049
+    paths:
+      - "development/80-rbac.yaml"
+    statement: >-
+      ConfigMap writes let developers change non-secret runtime configuration
+      in development only; Secrets are never granted by this Role.
+  - id: AVD-KSV-0056
+    paths:
+      - "development/80-rbac.yaml"
+    statement: >-
+      Service and NetworkPolicy writes are required for blue/green experiments
+      in development; the Role is namespaced and cannot reach other namespaces.
