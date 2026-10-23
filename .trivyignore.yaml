@@ -8,11 +8,11 @@ misconfigurations:
   # AVD-KSV-0020 / AVD-KSV-0021 recommend UID/GID > 10000 to avoid collisions
   # with the host user table.
   #
-  # The application images are built on node:24-alpine (UID/GID 1001) and
-  # nginx:alpine (UID/GID 101), and their files are owned by those IDs. Moving
-  # to >10000 requires rebuilding all four application images and recursively
-  # chowning their files. It adds no containment: every container already runs
-  # non-root, drops ALL capabilities, disables privilege escalation, uses the
+  # The application images are built on node:24.22.1-alpine3.24 (UID/GID 1001)
+  # and nginx:1.30.6-alpine (UID/GID 101), and their files are owned by those
+  # IDs. Moving to >10000 requires rebuilding all four application images and
+  # recursively chowning their files. This adds no containment: all containers
+  # run non-root, drop ALL capabilities, disable privilege escalation, use the
   # RuntimeDefault seccomp profile and (after this change) a read-only root
   # filesystem. The host-side risk is limited to the pod's own emptyDir
   # volumes, which are not shared with other workloads.
@@ -82,7 +82,7 @@ misconfigurations:
       - "production/blue/10-frontend-deployment.yaml"
       - "production/green/10-frontend-deployment.yaml"
     statement: >-
-      Only non-GHCR image is docker.io/nginx/nginx-prometheus-exporter:1.4.1,
+      Only non-GHCR image is docker.io/nginx/nginx-prometheus-exporter:1.5.3,
       the official NGINX sidecar pinned by tag; it is the single exception,
       scoped to the frontend Deployment files that use it.
   # AVD-KSV-0048 / AVD-KSV-0049 / AVD-KSV-0056 flag write verbs on workloads,
