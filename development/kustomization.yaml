@@ -14,3 +14,4 @@ resources:
   - 41-payment-api-service.yaml
   - 60-network-policy.yaml
   - 70-hpa.yaml
+  - 80-rbac.yaml
