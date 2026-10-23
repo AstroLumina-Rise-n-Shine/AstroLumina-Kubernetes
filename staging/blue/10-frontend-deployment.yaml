@@ -286,7 +286,7 @@ spec:
         # Prometheus metrics (nginx_http_requests_total, connections) on
         # :9113 — scraped via the frontend-live Service metrics port.
         - name: nginx-metrics
-          image: docker.io/nginx/nginx-prometheus-exporter:1.4.1
+          image: docker.io/nginx/nginx-prometheus-exporter:1.5.3
           imagePullPolicy: IfNotPresent
           args:
             - -nginx.scrape-uri=http://127.0.0.1:8080/stub_status
