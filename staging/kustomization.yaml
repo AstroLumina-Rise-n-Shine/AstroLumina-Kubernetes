@@ -11,3 +11,4 @@ resources:
   - 70-hpa.yaml
   - blue
   - green
+  - 80-rbac.yaml
