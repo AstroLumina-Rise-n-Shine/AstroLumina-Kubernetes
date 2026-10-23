@@ -109,7 +109,7 @@ spec:
               memory: 32Mi
       containers:
         - name: frontend
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.18
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.20
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
