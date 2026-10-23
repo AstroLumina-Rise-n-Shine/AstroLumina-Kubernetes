@@ -61,8 +61,10 @@ jobs:
       pull-requests: write
     steps:
       - name: Require at least one version
-        # Keep workflow inputs in the environment rather than interpolating
-        # user-controlled values into the shell program.
+        # Inputs are passed through env and quoted instead of being
+        # interpolated into the shell command (avoids script injection; the
+        # values are validated against an X.Y.Z/latest pattern in the Python
+        # step below).
         env:
           FRONTEND_VERSION: ${{ inputs.frontend_version }}
           ASTROLOGY_VERSION: ${{ inputs.astrology_version }}
