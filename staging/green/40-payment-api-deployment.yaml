@@ -61,7 +61,7 @@ spec:
           emptyDir: {}
       containers:
         - name: payment-api
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-paymentapi:2.0.15
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-paymentapi:2.0.16
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
