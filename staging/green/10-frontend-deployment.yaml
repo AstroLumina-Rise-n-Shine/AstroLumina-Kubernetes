@@ -82,7 +82,7 @@ spec:
       # copy while the rest of its root filesystem stays immutable.
       initContainers:
         - name: init-frontend-html
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.21
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.23
           imagePullPolicy: Always
           command:
             - /bin/sh
@@ -109,7 +109,7 @@ spec:
               memory: 32Mi
       containers:
         - name: frontend
-          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.21
+          image: ghcr.io/astrolumina-rise-n-shine/astrolumina-frontend:2.0.23
           imagePullPolicy: Always
           # Baseline hardening: no privilege escalation, no Linux capabilities.
           securityContext:
