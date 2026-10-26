@@ -43,7 +43,7 @@ spec:
     - to:
         - podSelector: {}
     # CoreDNS (kube-system) for name resolution, public HTTP(S) for the
-    # third-party APIs (RapidAPI, Cal.com, Stripe, Sentry, Cloudflare).
+    # third-party APIs (RapidAPI, Cal.com, Revolut Pay, Sentry, Cloudflare).
     # NOTE: no podSelector here on purpose — the RKE2 CoreDNS pods don't
     # carry our labels, so selecting on them would match nothing and all
     # pod DNS would break.

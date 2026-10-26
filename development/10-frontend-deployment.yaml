@@ -138,11 +138,11 @@ spec:
                 secretKeyRef:
                   name: env-frontend-secrets
                   key: FRONTEND_SENTRY_DSN
-            - name: STRIPE_PK
+            - name: REVOLUT_PAY_PUBLIC_KEY
               valueFrom:
                 secretKeyRef:
                   name: env-frontend-secrets
-                  key: STRIPE_PK
+                  key: REVOLUT_PAY_PUBLIC_KEY
             - name: R2_BASE_URL
               valueFrom:
                 secretKeyRef:

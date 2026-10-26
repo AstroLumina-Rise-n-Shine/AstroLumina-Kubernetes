@@ -14,10 +14,9 @@ regexes = [
   '''key:\s+[A-Z][A-Z0-9_]+$''',
   # HISTORIC secrets below were committed in development/02-secrets.yaml before
   # the placeholder refactor and the file was later deleted. They must be treated
-  # as compromised: rotate each of them (RapidAPI, Cal.com, Resend, Sentry, Stripe).
+  # as compromised: rotate each of them (RapidAPI, Cal.com, Resend, Sentry).
   '''6f3a5e9544mshd7e0a65190501c3p17f451jsn323abc5466e5''',
   '''cal_live_a0220066e8130b3dcb1da48c039d589f''',
   '''re_Yo6EjLos_LP4jZ69mkqauiknMbQxpi3M5''',
   '''cfut_qn3iNqpYYxSnQoJj4W5mA5TVFKFr0FcxNRWEhLIK6e3991f7''',
-  '''sk_test_51QsKuwI8IlTXEO0J7GYkGORq736TunFslDCkAb6tceDDStwU7Nq6UOHx9CnbkmTJWA2WEERjA2JtRcLTyWfeXzzY00yursmiJq''',
 ]

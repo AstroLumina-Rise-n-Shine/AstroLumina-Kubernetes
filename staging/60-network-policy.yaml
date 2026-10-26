@@ -68,7 +68,7 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: astrolumina-staging
     # CoreDNS (kube-system) for name resolution, public HTTP(S) for the
-    # third-party APIs (RapidAPI, Cal.com, Stripe, Sentry, Cloudflare).
+    # third-party APIs (RapidAPI, Cal.com, Revolut Pay, Sentry, Cloudflare).
     # NOTE: no podSelector here on purpose (see Traefik rule above) — the
     # RKE2 CoreDNS pods don't carry our labels either.
     - to:
