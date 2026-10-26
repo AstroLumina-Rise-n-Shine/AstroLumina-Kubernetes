@@ -65,7 +65,7 @@ spec:
               protocol: TCP
           # Full variable set from src/config/env.ts (the app exits at startup
           # if any required variable is missing; PORT alone is not read).
-          # Stripe price IDs live in the Secret, like the other Doppler values.
+          # Revolut Pay credentials live in the Secret, like the other Doppler values.
           env:
             - name: NODE_ENV
               valueFrom:
@@ -88,46 +88,16 @@ spec:
                   name: env-payment-api-secrets
                   key: CORS_ORIGINS
                   optional: true
-            - name: STRIPE_SK
+            - name: REVOLUT_PAY_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: env-payment-api-secrets
-                  key: STRIPE_SK
-            - name: STRIPE_API_VER
+                  key: REVOLUT_PAY_SECRET_KEY
+            - name: REVOLUT_PAY_API_VERSION
               valueFrom:
                 secretKeyRef:
                   name: env-payment-api-secrets
-                  key: STRIPE_API_VER
-            - name: STRIPE_SOARELE_STRALUCIREA_TA
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_SOARELE_STRALUCIREA_TA
-            - name: STRIPE_GHID_SATURN_IN_BERBEC
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_GHID_SATURN_IN_BERBEC
-            - name: STRIPE_ASTROGRAMA_NATALA_SI_KARMICA
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_ASTROGRAMA_NATALA_SI_KARMICA
-            - name: STRIPE_ASTROGRAMA_RELATIONALA
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_ASTROGRAMA_RELATIONALA
-            - name: STRIPE_ASTROGRAMA_PREVIZIONALA
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_ASTROGRAMA_PREVIZIONALA
-            - name: STRIPE_EVENIMENT_CONSTELATII
-              valueFrom:
-                secretKeyRef:
-                  name: env-payment-api-secrets
-                  key: STRIPE_EVENIMENT_CONSTELATII
+                  key: REVOLUT_PAY_API_VERSION
             - name: ASTROLOGY_API_SERVER_DC_PORT
               valueFrom:
                 secretKeyRef:
