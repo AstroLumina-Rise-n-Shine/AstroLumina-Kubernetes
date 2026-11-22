@@ -54,7 +54,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - rke2-worker-daniel-pirvu-02
+                      - rke2-wk-02
       # Writable scratch on a read-only root filesystem (emptyDir).
       volumes:
         - name: tmp-vol
